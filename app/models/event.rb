@@ -19,6 +19,14 @@ class Event < ApplicationRecord
   has_many :attendings, through: :attendances
   belongs_to :admin, class_name: "User"
 
+  def get_end_date
+    end_date = nil
+    if start_date.present?
+      end_date = start_date + duration.minutes
+    end
+    end_date
+  end
+
   private
 
   def start_date_cannot_be_in_the_past

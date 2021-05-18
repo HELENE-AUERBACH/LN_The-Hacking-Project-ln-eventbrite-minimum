@@ -28,15 +28,28 @@ ln-eventbrite-minimum$ bundle install
 ln-eventbrite-minimum$ rails -v
 (=> Rails 5.2.3)
 
-* Database creation
-
 1. En ce qui concerne l'environnement de développement :
+
+* Database creation
 
 Mettre à jour le fichier config/database.yml (il faut "personnaliser" le nom de la database, - ainsi qu'éventuellement le username et le host -, pour le development).
 
 ln-eventbrite-minimum$ RUBYOPT='-W:no-deprecated -W:no-experimental' rails db:create
 
 ln-eventbrite-minimum$ RUBYOPT='-W:no-deprecated -W:no-experimental' rails db:migrate
+
+* Database initialization
+
+ln-eventbrite-minimum$ RUBYOPT='-W:no-deprecated -W:no-experimental' rails db:seed
+
+* How to run the test suite
+
+ln-eventbrite-minimum$ RUBYOPT='-W:no-deprecated -W:no-experimental' rails console
+
+... :001 > require 'bcrypt'
+... :002 > ln = User.create(first_name: "LN", last_name: "Anonymous", description: "LN Anonymous/ln@yopmail.com - Tototo", email: "ln@yopmail.com", encrypted_password: BCrypt::Password.create("Tototo"))
+
+ln-eventbrite-minimum$ RUBYOPT='-W:no-deprecated -W:no-experimental' rails server (=> http://localhost:3000 )
 
 2. En ce qui concerne l'environnement de production :
 
@@ -52,11 +65,12 @@ ln-eventbrite-minimum$ heroku run rails db:seed
 
 * How to run the test suite
 
-ln-eventbrite-minimum$ heroku open
+ln-eventbrite-minimum$ heroku open (=> https://ln-thp-ln-eventbrite-minimum.herokuapp.com )
 
 ln-eventbrite-minimum$ heroku run rails console
 
-... :001 > ln = User.create(name: "LN", email: "ln@yopmail.com")
+... :001 > require 'bcrypt'
+... :002 > ln = User.create(first_name: "LN", last_name: "Anonymous", description: "LN Anonymous/ln@yopmail.com - Tototo", email: "ln@yopmail.com", encrypted_password: BCrypt::Password.create("Tototo"))
 
 * Services (job queues, cache servers, search engines, etc.)
 

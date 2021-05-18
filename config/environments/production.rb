@@ -91,4 +91,7 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
+
+  # url de l'application pour la redirection sur un formulaire pour changer un mot de passe
+  config.action_mailer.default_url_options = { :host => 'ln-thp-ln-eventbrite-minimum.herokuapp.com' }
 end

@@ -1,0 +1,37 @@
+<style type="text/css">
+  .description {
+    font-style: italic;
+    border-radius: 10px !important;
+    text-indent: 12px !important;
+    width: auto !important;
+    padding: 0px 8px !important;
+    text-align: center !important;
+    vertical-align: middle !important;
+    font: bold 11px / 20px &quot;Helvetica Neue&quot;, Helvetica, sans-serif !important;
+    --color: rgb(255, 255, 255) !important;
+    }
+</style>
+
+<% if !@user_hash['user'].nil? %>
+  <% flash.each do |type, msg| %>
+    <div class="alert alert-danger" role="alert">
+      <%= msg %>
+    </div>
+  <%end%>
+  <h1>Voici la page profil de l'utilisateur n°<%= @user_hash['index'] %></h1>
+  <div>
+    <p>Son prénom : <%= @user_hash['user'].first_name %></p>
+    <p>Son nom : <%= @user_hash['user'].last_name %></p>
+    <p>Sa description : <p class="description"><%= @user_hash['user'].description %></p></p>
+    <p>Son email : <%= @user_hash['user'].email %></p>
+  </div>
+<% else %>
+  <div class="alert alert-danger" role="alert">
+    <p>Aucun utilisateur de n°<%= @user_hash['index'] %> n'existe dans la base!</p>
+  </div>
+<% end %>
+<div>
+  <p>
+    <a href="<%= edit_user_registration_path %>" class="btn btn-primary btn-sm" role="button">Mettre à jour les informations du compte utilisateur</a>
+  </p>
+</div>
