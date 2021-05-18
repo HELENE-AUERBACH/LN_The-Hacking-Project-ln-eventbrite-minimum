@@ -22,7 +22,7 @@ users_array = []
 events_array = []
 attendances_array = []
 
-Faker::Config.locale = 'fr'
+Faker::Config.locale = 'en-US'
 
 puts "\nCréation d'un utilisateur de prénom, de nom et de password \"Anonymous\", qui a pour email \"anonymous@yopmail.com\"."
 anonymous_user = User.create(first_name: "Anonymous",
