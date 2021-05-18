@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <h1>Salut <%= @admin.first_name %> <%= @admin.last_name %> : ton événement a du succès !</h1>
+    <p>
+      Un nouveau futur participant à ton événement, <%= @attending.first_name %> <%= @attending.last_name %>, s'est inscrit sur monsite.fr en utilisant l'e-mail suivant : <%= @attending.email %>.
+    </p>
+    <p>
+      Pour accéder à ton espace administrateur, connecte-toi via : <%= @url %>.
+    </p>
+    <p> À très vite sur monsite.fr !
+  </body>
+</html>

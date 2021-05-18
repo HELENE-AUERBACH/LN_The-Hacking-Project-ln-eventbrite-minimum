@@ -13,4 +13,13 @@ class UserMailer < ApplicationMailer
     # c'est cet appel à mail() qui permet d'envoyer l’e-mail en définissant destinataire et sujet.
     mail(to: @user.email, subject: 'Bienvenue chez nous !')
   end
+
+  def new_attending_email(admin, attending)
+    @admin = admin
+    @attending = attending
+
+    @url  = 'http://monsite.fr/login'
+
+    mail(to: @admin.email, subject: 'Ton événement a du succès !')
+  end
 end
