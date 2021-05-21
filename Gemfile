@@ -72,5 +72,8 @@ end
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem 'dotenv-rails'
+#gem 'dotenv-rails'
+gem 'stripe', '~> 5.28'
+#gem 'table_print'
 
 gem 'devise'

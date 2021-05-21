@@ -1,0 +1,7 @@
+<h1>Règlement effectué</h1>
+<!-- shows users a success message -->
+<!-- Cette VIEW s’affiche si le paiement est réussi. -->
+<h2>
+  Merci <%= @user_hash['user'].first_name %> <%= @user_hash['user'].last_name %> pour votre achat de <strong><%= number_to_currency(@stripe_amount / 100.0, unit: "€", separator: ",", delimiter: "", format: "%n %u") %></strong> !
+</h2>
+<p>Un email vous a été envoyé à <%= @user_hash['user'].email %> avec le récapitulatif de votre commande.</p>

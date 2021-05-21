@@ -9,7 +9,22 @@
     vertical-align: middle !important;
     font: bold 11px / 20px &quot;Helvetica Neue&quot;, Helvetica, sans-serif !important;
     --color: rgb(255, 255, 255) !important;
-    }
+  }
+
+  table {
+    margin:auto;
+  }
+
+  table,
+  td {
+    border: 1px solid #333;
+  }
+
+  thead,
+  tfoot {
+    background-color: #333;
+    color: #fff;
+  }
 </style>
 
 <% if !@user_hash['user'].nil? %>
@@ -24,6 +39,35 @@
     <p>Son nom : <%= @user_hash['user'].last_name %></p>
     <p>Sa description : <p class="description"><%= @user_hash['user'].description %></p></p>
     <p>Son email : <%= @user_hash['user'].email %></p>
+    <br />
+    <div class="events_to_administrate">
+      <p>Il a créé <%= nb_events_to_administrate = @user_hash['user'].events_to_administrate.count %> événement(s).</p><br />
+      <% if nb_events_to_administrate > 0 %>
+        <% if nb_events_to_administrate > 1 %>
+          <p>Les <%= nb_events_to_administrate %> événements qu'il administre sont :</p>
+        <% else %>
+          <p>Le seul pévénement qu'il administre est :</p>
+        <% end %>
+        <table>
+          <caption>Liste des événements créés</caption>
+          <thead>
+            <tr>
+              <th>Titre</th>
+              <th>Page</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @user_hash['user'].events_to_administrate.each do |event| %>
+              <tr>
+                <td><%= event.title %></td>
+                <td><%= link_to "Evénement n°#{event.id}", event_path(event.id) %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+        <br />
+      <% end %>
+    </div>
   </div>
 <% else %>
   <div class="alert alert-danger" role="alert">
