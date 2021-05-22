@@ -13,6 +13,7 @@
     <label class="amount"> <!-- affichage du montant du paiement en € -->
       <span>Montant à régler : <%= number_to_currency(@event_hash['event'].price, unit: "€", separator: ",", delimiter: "", format: "%n %u") %></span>
     </label>
+    <%= button_to "Passer commande (Stripe version 2019)", event_checkout_create_path(event_id: @event_hash['index'], total: @event_hash['event'].price), class: "btn btn-primary my-3", remote: true %>
     <p>Clé publique = "<%= Rails.configuration.stripe[:stripe_publishable_key] %>"</p>
     <p>data-description="Achat d'une participation à l'événement"</p>
     <p>data-amount="<%= (@event_hash['event'].price * 100.0) %>"</p>
