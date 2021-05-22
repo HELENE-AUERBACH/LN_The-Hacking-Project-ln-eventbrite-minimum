@@ -48,7 +48,7 @@ class ChargesController < ApplicationController
       # Ce code crée un client Stripe, avec plusieurs paramètres dont l’email et le stripeToken.
       # Ensuite, si le paiement fonctionne, ce code crée un charge
       # ainsi qu'une participation à l'événement
-      Attendance.new(stripe_customer_id: @stripe_customer_hash['stripe_customer'].stripe_token)
+      attendance = Attendance.new(stripe_customer_id: @stripe_customer_hash['stripe_customer'].stripe_token)
       attendance.attending = @user_hash['user']
       attendance.event = @event_hash['event']
       attendance.save

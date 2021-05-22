@@ -35,10 +35,10 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent" style="font-family: 'Montserrat', sans-serif;">
           <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-              <p class="nav-link"><%= link_to "Accueil", events_path, method: "get" %></p>
+              <p class="nav-link"><%= link_to "Accueil", events_path, method: :get %></p>
             </li>
             <li class="nav-item">
-              <p class="nav-link"><%= link_to "Créer un événement", new_event_path, method: "get" %></p>
+              <p class="nav-link"><%= link_to "Créer un événement", new_event_path, method: :get %></p>
             </li>
             <% if !user_signed_in? %>
               <li class="nav-item dropdown">
@@ -46,9 +46,9 @@
                   S'inscrire / Se connecter
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <p class="nav-link"><%= link_to "S'inscrire", new_user_registration_path, method: "get" %></p>
+                  <p class="nav-link"><%= link_to "S'inscrire", new_user_registration_path, method: :get %></p>
                   <div class="dropdown-divider"></div>
-                  <p class="nav-link"><%= link_to "Se connecter", new_user_session_path, method: "get" %></p>
+                  <p class="nav-link"><%= link_to "Se connecter", new_user_session_path, method: :get %></p>
                 </div>
               </li>
             <% else %>
@@ -57,15 +57,20 @@
                   Mon profil
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <p class="nav-link"><%= link_to "Mon profil", user_path(current_user.id), method: "get" %></p>
+                  <p class="nav-link"><%= link_to "Mon profil", user_path(current_user.id), method: :get %></p>
                   <div class="dropdown-divider"></div>
-                  <p class="nav-link"><%= link_to "Se déconnecter", destroy_user_session_path, method: "delete" %></p>
+                  <p class="nav-link"><%= link_to "Se déconnecter", destroy_user_session_path, method: :delete, :data => {:confirm => "Êtes-vous sûr de vouloir vous déconnecter ?"} %></p>
                 </div>
               </li>
             <% end %>
           </ul>
         </div>
       </nav>
+      <% flash.each do | type, msg |%>
+        <div class=<%="alert alert-#{type}"%>>
+          <%= msg %>
+        </div>
+      <%end%>
     </div>
 
     <%= yield %>
