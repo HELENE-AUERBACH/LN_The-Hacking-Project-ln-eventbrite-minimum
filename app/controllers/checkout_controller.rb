@@ -1,7 +1,7 @@
 class CheckoutController < ApplicationController
   def create
     puts "$" * 60
-    puts "Salut, je suis dans le serveur pour une création"
+    puts "Salut, je suis dans le serveur pour une création checkout#create"
     puts "Ceci est le contenu du hash params : #{params}"
     @user_hash = get_user_hash
     @event_hash = get_event_hash
@@ -22,16 +22,20 @@ class CheckoutController < ApplicationController
         }],
         mode: 'payment',
         customer: @stripe_customer_hash['stripe_customer'],
-        customer_email: @current_user.email,
+        :customer_email => 
+          if @stripe_customer_hash['stripe_customer'].nil?
+            @current_user.email
+          end,
         success_url: event_checkout_success_url(event_id: @event_hash['index']) + '?session_id={CHECKOUT_SESSION_ID}',
-        cancel_url: root_url # checkout_cancel_url
+        cancel_url:  event_checkout_cancel_url,
+        locale: "fr",
+        payment_intent_data: {
+          setup_future_usage: "off_session",
+        }
       })
+      puts "session : #{@session}"
       respond_to do |format|
-        format.js # renders create.js.erb
-        #format.js
-        #format.html { render(:text => "not implemented") }
-        #format.js  { render :template => "checkout/create.js.erb"}
-        #format.js  { render :template => "checkout/events/#{@event_hash['index']}/create"}
+        format.html # renders create.html.erb
       end
 
       rescue Stripe::CardError => e
@@ -47,17 +51,25 @@ class CheckoutController < ApplicationController
     @payment_intent = Stripe::PaymentIntent.retrieve(@session.payment_intent)
     # si le paiement fonctionne, ce code crée en base une participation à l'événement
     puts "$" * 60
+    puts "Le paiement fonctionne : (checkout#success)"
     puts "session : #{@session}"
     puts "payment_intent : #{@payment_intent}"
-    attendance = Attendance.new(stripe_customer_id: @stripe_customer_hash['stripe_customer'].stripe_token)
-    attendance.attending = @user_hash['user']
-    attendance.event = @event_hash['event']
-    attendance.save
-    puts "Attendance : #{attendance}"
+    if !@payment_intent.nil?
+      @user_hash = get_user_hash
+      @event_hash = get_event_hash
+      attendance = Attendance.new(stripe_customer_id: @payment_intent.customer)
+      attendance.attending = @user_hash['user']
+      attendance.event = @event_hash['event']
+      attendance.save
+      puts "Attendance : #{attendance}"
+    end
     puts "$" * 60
   end
 
   def cancel
+    puts "$" * 60
+    puts "Le paiement ne fonctionne pas ou a été annulé par l'utilisateur (checkout#cancel)"
+    puts "$" * 60
   end
 
   private
@@ -95,7 +107,7 @@ class CheckoutController < ApplicationController
     @stripe_customer_hash = { "stripe_customer" => nil, "index" => -1 }
     stripe_customer_id = -1 
     stripe_customer = nil
-    attendance = Attendance.find_by(attending_id: current_user.id)
+    attendance = Attendance.where(attending_id: user_hash['index']).last
     puts "$" * 60
     if !attendance.nil?
       puts "stripe_customer_id : #{attendance.stripe_customer_id}"

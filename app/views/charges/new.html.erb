@@ -13,31 +13,42 @@
     <label class="amount"> <!-- affichage du montant du paiement en € -->
       <span>Montant à régler : <%= number_to_currency(@event_hash['event'].price, unit: "€", separator: ",", delimiter: "", format: "%n %u") %></span>
     </label>
-    <%= button_to "Passer commande (Stripe version 2019)", event_checkout_create_path(event_id: @event_hash['index'], total: @event_hash['event'].price), class: "btn btn-primary my-3", remote: true %>
+    <br />
+    <p>
+      <% if !@stripe_customer_hash['stripe_customer'].nil? %>
+        <%= submit_tag 'Payer avec votre compte Stripe' %>
+      <% end %>
+    </p>
+    <br />
+    <p>
+      <%= button_to "Passer commande (Stripe version 2019)", event_checkout_create_path(event_id: @event_hash['index'], total: @event_hash['event'].price), class: "btn btn-primary my-3", remote: true , form: { id: "checkout-button" }%>
+    </p>
+    <!--
+    <br />
     <p>Clé publique = "<%= Rails.configuration.stripe[:stripe_publishable_key] %>"</p>
     <p>data-description="Achat d'une participation à l'événement"</p>
     <p>data-amount="<%= (@event_hash['event'].price * 100.0) %>"</p>
-    <%= form_tag event_charges_path do %>
-      <% if !@stripe_customer_hash['stripe_customer'].nil? && @stripe_customer_hash['stripe_customer'].stripe_token %>
-        <%= submit_tag 'Payer avec votre compte Stripe' %>
-      <% else %>
-        <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
-          <!-- script qui affiche un bouton, et contient diverses informations : -->
-          <!-- Checkout displays a credit card overlay form, performs basic validation, and reports errors inline. -->
-          <!-- Le formulaire de paiement s’affiche après avoir cliqué sur le bouton de paiement. Il demande à l’utilisateur de renseigner son email, son numéro de carte bleue, la date d’expiration ainsi que le code de vérification à 3 chiffres de la carte. -->
-          <!-- 1. Une clé data-key dont l’authenticité est vérifiée par Stripe lors du paiement -->
-          data-key="<%= Rails.configuration.stripe[:stripe_publishable_key] %>"
-          <!-- 2. Une description data-description qui est le titre du formulaire de paiement -->
-          data-description="Achat d'une participation à l'événement"
-          <!-- 3. Un montant data-amount en cents qui est affiché dans le formulaire de paiement -->
-          data-amount="<%= (@event_hash['event'].price * 100.0) %>"
-          <!-- 4. Une personnalisation data-currency de la monnaie affichée dans le formulaire de paiement. Par défaut, Stripe utilise le $usd. -->
-          data-currency="eur"
-          <!-- 5. La variable data-locale est la langue dans laquelle le formulaire de paiement est présenté. La valeur par défaut de cette variable est auto, ce qui correspond à la langue locale de l’ordinateur de l’utilisateur. Pour changer de langue, remplacez cette valeur par la langue correspondante, par exemple "fr" pour le Français. -->
-          data-locale="auto">
-        </script>
-      <% end %>
-    <% end %>
+    -->
+    <!--<%= form_tag event_charges_path do %> -->
+    <!--  <% if !@stripe_customer_hash['stripe_customer'].nil? %> -->
+    <!--    <%= submit_tag 'Payer avec votre compte Stripe' %> -->
+    <!--  <% end %> -->
+    <!--  <script src="https://checkout.stripe.com/checkout.js" class="stripe-button" -->
+        <!-- script qui affiche un bouton, et contient diverses informations : -->
+        <!-- Checkout displays a credit card overlay form, performs basic validation, and reports errors inline. -->
+        <!-- Le formulaire de paiement s’affiche après avoir cliqué sur le bouton de paiement. Il demande à l’utilisateur de renseigner son email, son numéro de carte bleue, la date d’expiration ainsi que le code de vérification à 3 chiffres de la carte. -->
+        <!-- 1. Une clé data-key dont l’authenticité est vérifiée par Stripe lors du paiement -->
+    <!--    data-key="<%= Rails.configuration.stripe[:stripe_publishable_key] %>" -->
+        <!-- 2. Une description data-description qui est le titre du formulaire de paiement -->
+    <!--    data-description="Achat d'une participation à l'événement" -->
+        <!-- 3. Un montant data-amount en cents qui est affiché dans le formulaire de paiement -->
+    <!--    data-amount="<%= (@event_hash['event'].price * 100.0) %>" -->
+        <!-- 4. Une personnalisation data-currency de la monnaie affichée dans le formulaire de paiement. Par défaut, Stripe utilise le $usd. -->
+    <!--    data-currency="eur" -->
+        <!-- 5. La variable data-locale est la langue dans laquelle le formulaire de paiement est présenté. La valeur par défaut de cette variable est auto, ce qui correspond à la langue locale de l’ordinateur de l’utilisateur. Pour changer de langue, remplacez cette valeur par la langue correspondante, par exemple "fr" pour le Français. -->
+    <!--    data-locale="auto"> -->
+    <!--  </script> -->
+    <!--<% end %> -->
   </div>
 <% else %>
   <div class="alert alert-danger" role="alert">

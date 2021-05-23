@@ -1,14 +1,17 @@
 class ChargesController < ApplicationController
   def new
+    puts "$" * 60
+    puts "Salut, je suis dans le serveur pour un charges#new"
     @user_hash = get_user_hash
     @event_hash = get_event_hash
     @stripe_customer_hash = get_stripe_customer_hash(@user_hash)
+    puts "$" * 60
   end
 
   def create
     # Before the rescue, at the beginning of the method
     puts "$" * 60
-    puts "Salut, je suis dans le serveur pour une création"
+    puts "Salut, je suis dans le serveur pour une création charges#create"
     puts "Ceci est le contenu du hash params : #{params}"
     if !@user_hash['user'].nil? && !@event_hash['event'].nil?
       @stripe_amount = (@event_hash['event'].price * 100).to_i # montant de la transaction, en centimes
@@ -20,7 +23,7 @@ class ChargesController < ApplicationController
             source: params[:stripeToken], # le stripeToken concerne les informations liées à la carte bleue et permet de les garder en mémoire
                                           # representing the payment method provided, the token is automatically created by Checkout
           })
-          @stripe_customer_hash['index'] = @stripe_customer_hash['stripe_customer'].stripe_token
+          @stripe_customer_hash['index'] = @stripe_customer_hash['stripe_customer'].id
         end
         puts "stripe_customer_hash : #{@stripe_customer_hash}"
         
@@ -45,10 +48,10 @@ class ChargesController < ApplicationController
       # et son end au prochain end (ici, celui de la méthode create).
       
       # After the rescue, if the payment succeeded
-      # Ce code crée un client Stripe, avec plusieurs paramètres dont l’email et le stripeToken.
+      # Ce code crée un client Stripe, avec plusieurs paramètres dont l’email et l'id.
       # Ensuite, si le paiement fonctionne, ce code crée un charge
       # ainsi qu'une participation à l'événement
-      attendance = Attendance.new(stripe_customer_id: @stripe_customer_hash['stripe_customer'].stripe_token)
+      attendance = Attendance.new(stripe_customer_id: @stripe_customer_hash['index'])
       attendance.attending = @user_hash['user']
       attendance.event = @event_hash['event']
       attendance.save
@@ -67,7 +70,7 @@ class ChargesController < ApplicationController
       user = current_user
       @user_hash = { "user" => user, "index" => user_id }
     end
-    puts "user_hash : #{@user_hash}"
+    puts "get_user_hash : #{@user_hash}"
     puts "$" * 60
     @user_hash
   end
@@ -83,7 +86,7 @@ class ChargesController < ApplicationController
       event = Event.find_by(id: event_id)
     end
     @event_hash = { "event" => event, "index" => event_id }
-    puts "event_hash : #{@event_hash}"
+    puts "get_event_hash : #{@event_hash}"
     puts "$" * 60
     @event_hash
   end
@@ -92,7 +95,7 @@ class ChargesController < ApplicationController
     @stripe_customer_hash = { "stripe_customer" => nil, "index" => -1 }
     stripe_customer_id = -1 
     stripe_customer = nil
-    attendance = Attendance.find_by(attending_id: current_user.id)
+    attendance = Attendance.where(attending_id: user_hash['index']).last
     puts "$" * 60
     if !attendance.nil?
       puts "stripe_customer_id : #{attendance.stripe_customer_id}"
@@ -107,7 +110,7 @@ class ChargesController < ApplicationController
       end
     end
     @stripe_customer_hash = { "stripe_customer" => stripe_customer, "index" => stripe_customer_id }
-    puts "stripe_customer_hash : #{@stripe_customer_hash}"
+    puts "get_stripe_customer_hash : #{@stripe_customer_hash}"
     puts "$" * 60
     @stripe_customer_hash
   end
