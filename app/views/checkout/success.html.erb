@@ -5,6 +5,14 @@
   <h2>
     Merci <%= @user_hash['user'].first_name %> <%= @user_hash['user'].last_name %> pour votre achat de <strong><%= number_to_currency(@payment_intent.amount_received / 100.0, unit: "€", separator: ",", delimiter: "", format: "%n %u") %></strong> !
   </h2>
-  <p>Le statut de votre paiement est : <%= @payment_intent.status %>.</p>
-  <p>Un email vous a été envoyé à <%= @user_hash['user'].email %> avec le récapitulatif de votre commande.</p>
+  <div>
+    <p>Le statut de votre paiement est : <%= @payment_intent.status %>.</p>
+    <p>Un email vous a été envoyé à <%= @user_hash['user'].email %> avec le récapitulatif de votre commande.</p>
+  </div>
+  <BR>
+  <div>
+    <p>
+      <a href="<%= event_path(@event_hash['index']) %>" class="btn btn-danger btn-sm" role="button">Retourner sur la page de détails de l'événement auquel vous venez de vous inscrire</a>
+    </p>
+  </div>
 </div>

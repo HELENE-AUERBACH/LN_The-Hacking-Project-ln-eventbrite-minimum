@@ -1,0 +1,67 @@
+<% if !@event_hash['event'].nil? && user_signed_in? && admin?(current_user, @event_hash['event']) %>
+  
+  <h1>Modifie ton événement n°<%= @event_hash['index'] %></h1>
+
+  <% if !@event.nil? && @event.errors.any? %>
+    <div class="alert alert-danger" role="alert">
+      <p>Nous n'avons pas réussi à mettre à jour l'événement pour la (ou les) raison(s) suivante(s) :</p>
+      <ul>
+        <% @event.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+  
+  <%= form_tag event_path(@event_hash['index']), method: "post" do %>
+
+    <input type="hidden" name ="_method" value="put">
+
+    <%= label_tag 'Date de début' %>
+    <%= datetime_field_tag(:start_date, (@event_hash['event'].start_date if !@event_hash['event'].start_date.nil?), options = {min: Date.today + 1.days})%>
+    <br /> <br />
+    
+    <%= label_tag 'Durée en minutes' %>
+    <%= number_field_tag 'duration', (@event_hash['event'].duration if !@event_hash['event'].duration .nil?), min: 5, step: 5 %>
+    <br /> <br />
+    
+    <%= label_tag 'Titre' %>
+    <%= text_field_tag 'title', (@event_hash['event'].title if !@event_hash['event'].title.nil?), size: 150, minlength: 5, maxlength: 140 %>
+    <br /> <br />
+    
+    <%= label_tag 'Description' %>
+    <%= text_area_tag 'description', (@event_hash['event'].description if !@event_hash['event'].description.nil?), size: "25x10", minlength: 20, maxlength: 1000 %>
+    <br /> <br />
+    
+    <%= label_tag 'Prix en euros' %>
+    <%= number_field_tag 'price', (@event_hash['event'].price if !@event_hash['event'].price .nil?), min: 1, max: 1000, step: 1 %>
+    <br /> <br />
+    
+    <%= label_tag 'Lieu' %>
+    <%= text_field_tag 'location', (@event_hash['event'].location if !@event_hash['event'].location .nil?), size: 50, minlength: 1, maxlength: 40 %>
+    <br /> <br />
+    
+    <%= submit_tag "Enregistrer cette nouvelle version de ton événement" %>
+
+  <% end %>
+  
+  <BR>
+  <div>
+    <p>
+      <a href="<%= event_path(@event_hash['index']) %>" class="btn btn-danger btn-sm" role="button" data-confirm="Es-tu certain de vouloir supprimer définitivement cet événement?" data-method="DELETE">Supprimer cet événement</a>
+    </p>
+  </div>
+
+<% elsif @event_hash['event'].nil? %>
+
+  <div class="alert alert-danger" role="alert">
+    <p>Aucun événement de n°<%= @event_hash['index'] %> n'existe dans la base!</p>
+  </div>
+
+<% else %>
+
+  <div class="alert alert-danger" role="alert">
+    <p>Tu n'es pas l'auteur de cet événement de n°<%= @event_hash['index'] %> : tu n'es donc pas autorisé à le modifier en base!</p>
+  </div>
+
+<% end %>

@@ -14,7 +14,7 @@
   }
 </style>
 
-<% if !@event_hash['event'].nil? %>
+<% if !@event_hash['event'].nil? && user_signed_in? %>
   <h1>Voici la page de l'événement n°<%= @event_hash['index'] %></h1>
   <BR>
   <% if !notice.nil? %>
@@ -34,43 +34,57 @@
     <p>La date de dernière modification de l'événement : <%= @event_hash['event'].updated_at %></p>
     <p>Le lieu de l'événement : <%= @event_hash['event'].location %></p>
     <p>Son prix : <%= @event_hash['event'].price %></p>
+    <p>Il y a <%= nb_attendings = @event_hash['event'].attendings.count %> participant(s) inscrit(s) à cet événement.</p><br />
     <br />
-    <div class="attendings">
-      <p>Il y a <%= nb_attendings = @event_hash['event'].attendings.count %> participant(s) inscrit(s) à cet événement.</p><br />
-      <% if nb_attendings > 0 %>
-        <% if nb_attendings > 1 %>
-          <p>Les <%= nb_attendings %> participants inscrits à cet événement sont :</p>
-        <% else %>
-          <p>Le seul participant inscrit à cet événement est :</p>
-        <% end %>
-        <table>
-          <caption>Liste des participants inscrits à cet événement</caption>
-          <thead>
-            <tr>
-              <th>Participant</th>
-              <th>Email</th>
-            </tr>
-          </thead>
-          <tbody>
-            <% @event_hash['event'].attendings.each do |attending| %>
+    <% if admin?(current_user, @event_hash['event']) %>
+      <div class="attendings">
+        <% if nb_attendings > 0 %>
+          <% if nb_attendings > 1 %>
+            <p>Les <%= nb_attendings %> participants inscrits à cet événement sont :</p>
+          <% else %>
+            <p>Le seul participant inscrit à cet événement est :</p>
+          <% end %>
+          <table>
+            <caption>Liste des participants inscrits à cet événement</caption>
+            <thead>
               <tr>
-                <td class="author"><em><%= link_to "#{attending.first_name} #{attending.last_name}", user_path(attending.id) %></em></td>
-                <td><%= attending.email %></td>
+                <th>Participant</th>
+                <th>Email</th>
               </tr>
-            <% end %>
-          </tbody>
-        </table>
-        <br />
-      <% end %>
-    </div>
-    <div>
-      <p>
-        <a href="<%= new_event_charge_path(@event_hash['index']) %>" class="btn btn-primary btn-sm" role="button">Rejoindre l'événement</a>
-      </p>
-    </div>
+            </thead>
+            <tbody>
+              <% @event_hash['event'].attendings.each do |attending| %>
+                <tr>
+                  <td class="author"><em><%= link_to "#{attending.first_name} #{attending.last_name}", user_path(attending.id) %></em></td>
+                  <td><%= attending.email %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+          <br />
+        <% end %>
+      </div>
+      <div>
+        <p>
+          <a href="<%= event_attendances_path(@event_hash['index']) %>" class="btn btn-primary btn-sm" role="button">Mon espace événement</a>
+        </p>
+      </div>
+    <% end %>
+    <% if !admin?(current_user, @event_hash['event']) && !attending?(current_user, @event_hash['event']) %>
+      <!-- Sur la page d'un événement, si un utilisateur est connecté, et que ce dernier n'est ni le créateur, ni déjà l'un des participants à l'événement, un lien "rejoindre l'événement" doit être visible sur la page. Ce lien doit renvoyer vers un formulaire à remplir, branché à Stripe afin de lui faire payer le prix de l'événement. -->
+      <div>
+        <p>
+          <a href="<%= new_event_charge_path(@event_hash['index']) %>" class="btn btn-primary btn-sm" role="button">Rejoindre l'événement</a>
+        </p>
+      </div>
+    <% end %>
+  </div>
+<% elsif @event_hash['event'].nil? %>
+  <div class="alert alert-danger" role="alert">
+    <p>aucun événement de n°<%= @event_hash['index'] %> n'existe dans la base!</p>
   </div>
 <% else %>
   <div class="alert alert-danger" role="alert">
-    <p>aucun événement de n°<%= @event_hash['index'] %> n'existe dans la base!</p>
+    <p>Tu n'es pas connecté : tu n'es donc pas autorisé à visualiser les détails de cet événement!</p>
   </div>
 <% end %>

@@ -1,0 +1,9 @@
+ Salut <%= @attendance.attending.first_name %> <%= @attendance.attending.last_name %> : merci d'avoir commandé chez nous !
+==========================================================================================
+
+Tu t'es inscrit à un événement via monsite.fr en utilisant l'e-mail suivant : <%= @attendance.attending.email %>.
+
+Voici le récapitulatif de ta commande :
+Pour l'inscription le <%= @attendance.created_at %> à l'événement n°<%= @attendance.event.id %>-"<%= @attendance.event.title %>", tu as réglé la somme de <%= number_to_currency(@attendance.event.price, unit: "€", separator: ",", delimiter: "", format: "%n %u") %> !
+
+À très vite sur monsite.fr !

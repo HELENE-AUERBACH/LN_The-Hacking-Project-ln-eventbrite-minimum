@@ -1,4 +1,6 @@
 class ChargesController < ApplicationController
+  before_action :authenticate_user!
+
   def new
     puts "$" * 60
     puts "Salut, je suis dans le serveur pour un charges#new"

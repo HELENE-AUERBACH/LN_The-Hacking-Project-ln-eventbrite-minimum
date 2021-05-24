@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <h1>Salut <%= @attendance.attending.first_name %> <%= @attendance.attending.last_name %> et merci d'avoir commandé chez nous !</h1>
+    <p>
+      Tu t'es inscrit à un événement via monsite.fr en utilisant l'e-mail suivant : <%= @attendance.attending.email %>.
+    </p>
+    <p>
+      Voici le récapitulatif de ta commande :
+    </p>
+    <p>
+      Pour l'inscription le <%= @attendance.created_at %> à l'événement n°<%= @attendance.event.id %>-"<%= @attendance.event.title %>", tu as réglé la somme de <strong><%= number_to_currency(@attendance.event.price, unit: "€", separator: ",", delimiter: "", format: "%n %u") %></strong> !
+    </p>
+    <p> À très vite sur monsite.fr !
+  </body>
+</html>

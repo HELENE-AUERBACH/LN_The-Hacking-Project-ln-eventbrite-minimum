@@ -1,4 +1,6 @@
 class CheckoutController < ApplicationController
+  before_action :authenticate_user!
+
   def create
     puts "$" * 60
     puts "Salut, je suis dans le serveur pour une création checkout#create"

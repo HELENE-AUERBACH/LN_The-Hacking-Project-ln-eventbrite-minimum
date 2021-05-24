@@ -1,5 +1,6 @@
 class EventsController < ApplicationController
   before_action :authenticate_user!, only: [:new, :create, :edit, :update, :destroy, :show]
+  before_action :event_admin?, only: [:edit, :update, :destroy]
 
   def index
     # Méthode qui récupère tous les événements et les envoie à la view index (index.html.erb) pour affichage
@@ -115,5 +116,20 @@ class EventsController < ApplicationController
     puts "event_hash : #{@event_hash}"
     puts "$" * 60
     @event_hash
+  end
+
+  def event_admin?
+    event_id = params[:id].to_i
+    event = nil
+    puts "$" * 60
+    puts "event_id : #{event_id}"
+    nb_total = Event.last.id
+    if event_id.between?(1, nb_total)
+      event = Event.find_by(id: event_id)
+    end
+    unless !event.nil? && event.admin == current_user
+      redirect_to events_path, notice: "Vous n'êtes pas l'administrateur de cet événement!"
+    end
+    puts "$" * 60
   end
 end

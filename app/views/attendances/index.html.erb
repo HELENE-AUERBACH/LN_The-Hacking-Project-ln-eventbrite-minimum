@@ -1,0 +1,58 @@
+<style type="text/css">
+  table {
+    margin:auto;
+  }
+  table,
+  td {
+    border: 1px solid #333;
+  }
+
+  thead,
+  tfoot {
+    background-color: #333;
+    color: #fff;
+  }
+</style>
+
+<% if !notice.nil? %>
+  <div class="alert alert-success" role="alert">
+    <p id="notice"><%= notice %></p>
+  </div>
+<% end %>
+<% if admin?(current_user, @event_hash['event']) %>
+  <h1>Les invités à mon événement</h1>
+  <div class="attendings">
+    <p>Il y a <%= nb_attendings = @attendances.count %> participant(s) inscrit(s) à l'événement n°<%= @event_hash['index'] %>.</p><br />
+    <% if nb_attendings > 0 %>
+      <% if nb_attendings > 1 %>
+        <p>Les <%= nb_attendings %> participants inscrits à cet événement sont :</p>
+      <% else %>
+        <p>Le seul participant inscrit à cet événement est :</p>
+      <% end %>
+      <table>
+        <caption>Liste des participants inscrits à cet événement</caption>
+        <thead>
+          <tr>
+            <th>Participant</th>
+            <th>Stripe Customer Id</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @attendances.each do |attendance| %>
+            <tr>
+              <td class="author"><em><%= link_to "#{attendance.attending.first_name} #{attendance.attending.last_name} (#{attendance.attending.email})", user_path(attendance.attending.id) %></em></td>
+              <td><%= attendance.stripe_customer_id %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+      <br />
+    <% end %>
+  </div>
+  <div>
+    <p>
+      <a href="<%= edit_event_path(@event_hash['index']) %>" class="btn btn-primary btn-sm" role="button">Modifier (ou supprimer) l'événement n°<%= @event_hash['index'] %></a>
+    </p>
+  </div>
+<% end %>
+
