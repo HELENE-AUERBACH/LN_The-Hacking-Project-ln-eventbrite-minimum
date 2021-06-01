@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
+  devise_for :users
   get 'static_pages/index'
   get 'static_pages/secret'
-  devise_for :users
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   resources :events do
     resources :attendances
@@ -13,5 +13,8 @@ Rails.application.routes.draw do
     end
   end
   resources :users, only: [:show]
+  namespace :static do
+    resources :team, :contact, :ui_kit, only: [:index]
+  end
   root 'static_pages#index'
 end

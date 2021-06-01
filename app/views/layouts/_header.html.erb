@@ -1,0 +1,56 @@
+    <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
+      <h5 class="my-0 font-weight-normal mr-auto" style="font-family: 'Montserrat', sans-serif;">The Eventbrite minimal Project</h5>
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent" style="font-family: 'Montserrat', sans-serif;">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+              <p class="nav-link"><%= link_to "Accueil", events_path, method: :get %></p>
+            </li>
+            <li class="nav-item">
+              <p class="nav-link"><%= link_to "Créer un événement", new_event_path, method: :get %></p>
+            </li>
+            <li class="nav-item">
+              <p class="nav-link"><%= link_to "Team", static_team_index_path, method: :get %></p>
+            </li>
+            <li class="nav-item">
+              <p class="nav-link"><%= link_to "Contact", static_contact_index_path, method: :get %></p>
+            </li>
+            <li class="nav-item">
+              <p class="nav-link"><%= link_to "Notre Kit UI", static_ui_kit_index_path, method: :get %><span class="sr-only">(current)</span></p>
+            </li>
+            <% if !user_signed_in? %>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  S'inscrire / Se connecter
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <p class="nav-link"><%= link_to "S'inscrire", new_user_registration_path, method: :get %></p>
+                  <div class="dropdown-divider"></div>
+                  <p class="nav-link"><%= link_to "Se connecter", new_user_session_path, method: :get %></p>
+                </div>
+              </li>
+            <% else %>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Mon profil
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <p class="nav-link"><%= link_to "Mon profil", user_path(current_user.id), method: :get %></p>
+                  <div class="dropdown-divider"></div>
+                  <p class="nav-link"><%= link_to "Se déconnecter", destroy_user_session_path, method: :delete, :data => {:confirm => "Êtes-vous sûr de vouloir vous déconnecter ?"} %></p>
+                </div>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+      </nav>
+      <% flash.each do | type, msg |%>
+        <div class=<%="alert alert-#{type}"%>>
+          <%= msg %>
+        </div>
+      <%end%>
+    </div>

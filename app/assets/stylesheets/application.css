@@ -13,3 +13,17 @@
  *= require_tree .
  *= require_self
  */
+.our-jumbotron-hero {
+  background-image: url(images/photo-hero.jpeg);
+  height: 500px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.our-jumbotron-small-hero {
+  background-image: url(images/pexels-rahul-pandit-3052448_1.jpg);
+  height: 180px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
